@@ -188,6 +188,7 @@
   }
   .card:hover .screen::after{transform:rotate(8deg) translateX(360%)}
 
+  .screen .thumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
   .screen .status{position:absolute;top:12px;left:0;right:0;z-index:3;
     display:flex;align-items:center;justify-content:center;gap:6px}
   .screen .status i{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.7)}
@@ -338,7 +339,7 @@
 <main id="home" class="view active">
   <section class="hero">
     <div class="wrap">
-      <p class="hero-kicker">Hi I'm Chanwoo Park. Adaptive, Smart-working, practical.</p>
+      <p class="hero-kicker">Hi, I'm Chanwoo Park. Adaptive, Smart-working, practical.</p>
       <h1>
         <span class="line"><span>일상 속 불편함을</span></span>
         <span class="line"><span>소프트웨어로</span></span>
@@ -394,7 +395,7 @@ const PROJECTS = [
     id:"lms-notifier", name:"LMS Notifier", sub:"과제 마감을 놓치지 않게",
     platform:"iOS · Android · Server", year:"2025", chip:"iOS·AND",
     grad:"linear-gradient(155deg,#2745E8,#5AA9FF)",
-    video:"videos/LMSnotifier.mov",
+    video:"videos/LMSnotifier.mp4", thumb:"videos/LMSnotifier.jpg",
     why:"과제 마감을 억울하게 놓치는 일을 해결하기 위한 필요에서 출발했습니다.",
     what:"Java, Swift 기반 애플리케이션을 구현하고, 미제출 과제를 확인하는 FastAPI 서버 API를 구축했습니다.",
     stack:{
@@ -409,7 +410,7 @@ const PROJECTS = [
     id:"umbrella", name:"우산대여앱", sub:"학교 우산대여제 신청·반납 앱",
     platform:"Android", year:"2021", chip:"AND",
     grad:"linear-gradient(155deg,#0F9E8E,#4FD6BE)",
-    video:"videos/umbrella.mp4",
+    video:"videos/umbrella.mp4", thumb:"videos/umbrella.mp4",
     why:"고등학교에서 실시 중이던 우산대여제 신청 및 반납을 앱으로 편리하게 하기 위한 필요에서 출발했습니다.",
     what:"Java를 이용해 안드로이드 애플리케이션을 디자인·구현하고 Firebase를 연결했습니다.",
     stack:{
@@ -424,7 +425,7 @@ const PROJECTS = [
     id:"umbrella-admin", name:"우산대여앱 관리자용", sub:"대여 현황을 한눈에 관리하는 앱",
     platform:"Android", year:"2021", chip:"AND",
     grad:"linear-gradient(155deg,#0C7E78,#37B89F)",
-    video:"videos/umbrella_admin.mp4",
+    video:"videos/umbrella_admin.mp4", thumb:"videos/umbrella_admin.jpg",
     why:"우산대여제 관리자가 대여 현황을 쉽게 파악하고 처리할 수 있게 하기 위한 필요에서 출발했습니다.",
     what:"Java를 이용해 안드로이드 애플리케이션을 구현하고 Firebase 환경을 연결했습니다.",
     stack:{
@@ -437,9 +438,9 @@ const PROJECTS = [
   },
   {
     id:"quick-notes", name:"바로가기 할일", sub:"알림센터에서 늘 보이는 할 일 메모",
-    platform:"Android", year:"2024", chip:"Play",
+    platform:"Android", year:"2024", chip:"AND",
     grad:"linear-gradient(155deg,#E07A22,#FF6F5C)",
-    video:"videos/QuickNotes.mp4",
+    video:"videos/QuickNotes.mp4", thumb:"videos/QuickNotes.mp4",
     why:"할 일을 메모앱이나 위젯에 적어두면 잊어버리는 일이 많아, 항상 알림센터에서 볼 수 있게 하기 위한 필요에서 출발했습니다.",
     what:"Java를 이용해 안드로이드 애플리케이션을 디자인·구현했습니다.",
     stack:{
@@ -472,6 +473,7 @@ document.getElementById('proj-count').textContent = String(PROJECTS.length).padS
 grid.innerHTML = PROJECTS.map(p => `
   <a class="card" href="#/p/${p.id}" aria-label="${p.name} 상세 보기">
     <div class="screen" style="--g:${p.grad}">
+      ${p.thumb ? `<img class="thumb" src="${p.thumb}" alt="${p.name} 썸네일" loading="lazy">` : ''}
       <div class="status"><i></i><i></i><i></i></div>
       <div class="glyph">${playIcon}</div>
       <div class="label">
@@ -492,11 +494,11 @@ grid.innerHTML = PROJECTS.map(p => `
 const detailGrid = document.getElementById('detail-grid');
 function renderDetail(p){
   const media = p.video
-    ? `<video controls playsinline preload="metadata"><source src="${p.video}" type="video/mp4"></video>`
-    : `<div class="poster" style="background:${p.grad}">
+    ? `<video autoplay muted loop playsinline controls preload="auto"${p.thumb?` poster="${p.thumb}"`:''}><source src="${p.video}" type="video/mp4"></video>`
+    : `<div class="poster" style="background:${p.thumb?`#000 center/cover no-repeat url('${p.thumb}')`:p.grad}">
          ${playIcon}
-         <div class="pn">${p.name}</div>
-         <div class="ps">데모 영상을 연결하면<br>여기에서 재생됩니다</div>
+         ${p.thumb ? '' : `<div class="pn">${p.name}</div>
+         <div class="ps">데모 영상을 연결하면<br>여기에서 재생됩니다</div>`}
        </div>`;
 
   const stackHtml = Object.entries(p.stack).map(([k,v]) => `
