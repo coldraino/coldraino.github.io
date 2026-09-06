@@ -234,7 +234,7 @@
     box-shadow:0 0 0 3px rgba(34,181,116,.2);animation:pulse 2.6s ease-in-out infinite}
 
   /* ── detail view ── */
-  .detail{padding:36px 0 90px}
+  .detail{padding-top:36px;padding-bottom:90px}
   .back{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);
     font-size:13px;color:var(--muted);text-decoration:none;border:1px solid var(--line);
     padding:9px 15px;border-radius:999px;background:var(--glass);transition:.25s;margin-bottom:38px}
@@ -322,6 +322,7 @@
     letter-spacing:-.02em;color:var(--ink)}
   .stat-row .st small{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;
     color:var(--muted);margin-top:3px}
+  .stats-note{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin:-6px 0 14px}
 
   .d-foot{margin-top:30px;display:flex;flex-wrap:wrap;gap:12px}
   .lnk{font-family:var(--mono);font-size:13px;text-decoration:none;color:#fff;
@@ -367,6 +368,22 @@
   .skill .bar i{flex:1;height:6px;border-radius:3px;background:var(--line-strong)}
   .skill .bar i.on{background:linear-gradient(90deg,var(--accent),#6f8bff)}
 
+  /* ── values / 인재상 매칭 ── */
+  .values{padding-bottom:80px}
+  .values-lead{max-width:60ch;font-size:15px;color:var(--ink-soft);line-height:1.7;margin:-14px 0 28px}
+  .value-list{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:720px){.value-list{grid-template-columns:1fr}}
+  .value{background:var(--glass);border:1px solid var(--line);border-radius:18px;
+    padding:20px 22px;backdrop-filter:blur(8px)}
+  .value .q{display:flex;align-items:flex-start;gap:11px;font-size:14.5px;font-weight:600;
+    color:var(--ink);line-height:1.5}
+  .value .q .mk{flex:none;width:22px;height:22px;border-radius:7px;margin-top:1px;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(39,69,232,.12);color:var(--accent-deep)}
+  .value .q .mk svg{width:13px;height:13px}
+  .value .a{font-size:13.5px;color:var(--ink-soft);line-height:1.7;margin-top:11px;
+    padding-top:12px;border-top:1px solid var(--line)}
+
   /* ── print / PDF ── */
   @media print{
     :root{--bg:#fff}
@@ -377,16 +394,15 @@
     .atmosphere{display:none}
     .topbar{position:static;background:#fff;backdrop-filter:none;border-bottom:1px solid var(--line)}
     .brand .dot{animation:none}
-    /* 인쇄 시 홈과 상세 뷰를 모두 펼쳐서 한 PDF에 담기 */
     .view{display:block !important}
     .hero{padding:20px 0 24px}
-    .card,.dsec,.skill-group,.frame,.store-block,.detail-body{break-inside:avoid}
+    .card,.dsec,.skill-group,.value,.frame,.store-block,.detail-body{break-inside:avoid}
     .grid{grid-template-columns:repeat(3,1fr) !important;gap:14px}
     .card:hover{transform:none;box-shadow:none}
     .frame{position:static;box-shadow:none;max-width:220px}
     .detail{padding-top:20px}
     .back,.d-foot{display:none}
-    .skills{padding-bottom:24px}
+    .skills,.values{padding-bottom:24px}
     a[href^="http"]::after{content:" (" attr(href) ")";font-family:var(--mono);
       font-size:9px;color:var(--muted);word-break:break-all}
   }
@@ -440,6 +456,15 @@
     </div>
     <div class="grid" id="grid"></div>
   </section>
+
+  <section class="wrap values">
+    <div class="sec-head">
+      <h2>Fit</h2>
+      <span class="count">이런 경험을 해왔습니다</span>
+    </div>
+    <p class="values-lead">유어슈가 함께하고 싶다고 밝힌 역량들에, 제 경험을 하나씩 비추어 정리했습니다.</p>
+    <div class="value-list" id="value-list"></div>
+  </section>
 </main>
 
 <!-- ============ DETAIL ============ -->
@@ -476,7 +501,7 @@ const PROJECTS = [
     grad:"linear-gradient(155deg,#2745E8,#5AA9FF)",
     video:"videos/LMSnotifier.mp4", thumb:"videos/LMSnotifier.jpg",
     why:"과제 마감을 억울하게 놓치는 일을 해결하기 위한 필요에서 출발했습니다.",
-    what:"Java, Swift 기반 애플리케이션을 구현하고, 미제출 과제를 확인하는 FastAPI 서버 API를 구축했습니다.",
+    what:"Java, Swift 기반 애플리케이션을 구현하고, 사용자 별로 당일 미제출 과제를 확인하고 알림을 보내주는 FastAPI 서버 API를 구축했습니다.",
     stack:{
       "Languages":["Kotlin (AOS)","Swift (iOS)","Python (Server)"],
       "Frameworks & Libraries":["FastAPI","FCM (Messaging)"],
@@ -484,6 +509,27 @@ const PROJECTS = [
       "Tools":["Android Studio","Xcode","VSCode"]
     },
     future:"출석 마감 기한이 있는 동영상 강의는 로그인 시 발급되는 일회성 토큰이 있을 때만 가져올 수 있어, 해당 강의는 아직 가져오지 못했습니다. 해결 방법을 찾고 있습니다."
+  },
+  {
+    id:"quick-notes", name:"바로가기 할일", sub:"알림센터에서 늘 보이는 할 일 메모",
+    platform:"Android", year:"2024", chip:"AND",
+    grad:"linear-gradient(155deg,#E07A22,#FF6F5C)",
+    video:"videos/QuickNotes.mp4", thumb:"videos/QuickNotes.jpg",
+    why:"할 일을 메모앱이나 위젯에 적어두면 잊어버리는 일이 많아, 항상 알림센터에서 볼 수 있게 하기 위한 필요에서 출발했습니다.",
+    what:"Java를 이용해 안드로이드 애플리케이션을 디자인·구현했습니다.",
+    stack:{
+      "Languages":["Java"],
+      "Frameworks & Libraries":["Android Broadcast Receiver","Android Fragment"],
+      "Tools":["Android Studio","VSCode"]
+    },
+    future:"알림센터에서 바로 메모 내용을 수정하는 방법을 고민하고 있습니다. 또한 알림이 지워지는 것을 감지하기 위해 백그라운드에서 배터리를 소모하는데, 이 사용량을 최적화하는 방법을 찾고 있습니다.",
+    store:{ url:"https://play.google.com/store/apps/details?id=com.real.mynewcustomnoti", label:"Google Play 에서 보기" },
+    statsNote:"2026.08.30 기준",
+    stats:[
+      {n:"273", l:"TOTAL DOWNLOADS"},
+      {n:"16.8", l:"ACTIVE DEVICES"},
+      {n:"6.39", l:"MAUs"}
+    ]
   },
   {
     id:"umbrella", name:"우산대여앱", sub:"학교 우산대여제 신청·반납 앱",
@@ -514,26 +560,6 @@ const PROJECTS = [
       "Tools":["Android Studio","Sketchware"]
     },
     future:"관리자용 앱이다 보니 UI·UX 디자인과 완성도가 부족했습니다."
-  },
-  {
-    id:"quick-notes", name:"바로가기 할일", sub:"알림센터에서 늘 보이는 할 일 메모",
-    platform:"Android", year:"2024", chip:"AND",
-    grad:"linear-gradient(155deg,#E07A22,#FF6F5C)",
-    video:"videos/QuickNotes.mp4", thumb:"videos/QuickNotes.jpg",
-    why:"할 일을 메모앱이나 위젯에 적어두면 잊어버리는 일이 많아, 항상 알림센터에서 볼 수 있게 하기 위한 필요에서 출발했습니다.",
-    what:"Java를 이용해 안드로이드 애플리케이션을 디자인·구현했습니다.",
-    stack:{
-      "Languages":["Java"],
-      "Frameworks & Libraries":["Android Broadcast Receiver","Android Fragment"],
-      "Tools":["Android Studio","VSCode"]
-    },
-    future:"알림센터에서 바로 메모 내용을 수정하는 방법을 고민하고 있습니다. 또한 알림이 지워지는 것을 감지하기 위해 백그라운드에서 배터리를 소모하는데, 이 사용량을 최적화하는 방법을 찾고 있습니다.",
-    store:{ url:"https://play.google.com/store/apps/details?id=com.real.mynewcustomnoti", label:"Google Play 에서 보기" },
-    stats:[
-      {n:"260", l:"TOTAL DOWNLOADS"},
-      {n:"14.4", l:"ACTIVATION USERS"},
-      {n:"8.5", l:"MAUs"}
-    ]
   }
 ];
 
@@ -549,14 +575,13 @@ const icons = {
 const playStoreIcon = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3.6 2.3 13.9 12 3.6 21.7a1.5 1.5 0 0 1-.6-1.2V3.5c0-.5.2-.9.6-1.2Z" fill="#34D399"/><path d="m16.7 9.2 3.4 1.9c1.1.6 1.1 2.2 0 2.8l-3.4 1.9L13.9 12l2.8-2.8Z" fill="#FBBF24"/><path d="M3.6 2.3a1.5 1.5 0 0 1 1.5.1l11.6 6.8L13.9 12 3.6 2.3Z" fill="#60A5FA"/><path d="m13.9 12 2.8 2.8L5.1 21.6a1.5 1.5 0 0 1-1.5.1L13.9 12Z" fill="#F87171"/></svg>`;
 
 /* ───────── 기술 스택 & 숙련도 ─────────
-   level 은 1~5 (막대 5칸 중 채워지는 칸 수). note 는 짧은 설명(선택).
-   본인 실력에 맞게 자유롭게 수정하세요.                              */
+   level 은 1~5 (막대 5칸 중 채워지는 칸 수). note 는 짧은 설명(선택).  */
 const SKILLS = [
   { group:"Languages", items:[
     { name:"Java",   level:5, note:"주력 · 안드로이드 앱 다수" },
-    { name:"Kotlin", level:4, note:"AOS 네이티브" },
+    { name:"Kotlin", level:3, note:"AOS 네이티브" },
     { name:"Swift",  level:3, note:"iOS 앱 구현" },
-    { name:"Python", level:3, note:"FastAPI 서버" }
+    { name:"Python", level:4, note:"FastAPI 서버" }
   ]},
   { group:"Frameworks & Libraries", items:[
     { name:"FastAPI",  level:4, note:"REST API 서버" },
@@ -564,14 +589,13 @@ const SKILLS = [
     { name:"FCM",      level:3, note:"푸시 알림" }
   ]},
   { group:"Tools & Infra", items:[
-    { name:"Android Studio", level:5 },
-    { name:"Xcode",          level:3 },
-    { name:"Git / GitHub",   level:4 },
-    { name:"Fly.io",         level:3, note:"배포" }
+    { name:"Android Studio", level:4 },
+    { name:"Xcode",          level:4 },
+    { name:"Git / GitHub",   level:3 },
+    { name:"Fly.io",         level:4, note:"배포" }
   ]}
 ];
 
-/* ── render skills ── */
 const skillGroups = document.getElementById('skill-groups');
 if (skillGroups) {
   skillGroups.innerHTML = SKILLS.map(g => `
@@ -585,6 +609,29 @@ if (skillGroups) {
           </div>
           <div class="bar">${[1,2,3,4,5].map(n => `<i class="${n<=s.level?'on':''}"></i>`).join('')}</div>
         </div>`).join('')}
+    </div>`).join('');
+}
+
+/* ───────── 인재상 매칭 (유어슈) ─────────
+   q: 유어슈가 밝힌 역량,  a: 내 경험으로 답한 내용. 자유롭게 수정하세요.  */
+const VALUES = [
+  { q:"Swift의 기본 문법과 언어 전반에 대한 이해를 바탕으로 개발해본 경험",
+    a:"직접 사용하는 iPhone을 위해 LMS Notifier의 iOS 앱을 Swift로 구현했습니다. FCM 푸시 연동과 서버 API 연동까지 언어와 프레임워크를 실제 동작하는 앱 수준으로 다뤄봤습니다." },
+  { q:"유저 피드백을 기반으로 앱의 성능과 사용성을 개선하고 실제로 적용해본 경험",
+    a:"바로가기 할일을 Google Play에 출시해 실제 사용자 피드백을 받았고, 확장 알림 뷰·글자 크기 조절·명도 대비 보정 등 접근성과 사용성을 반복해서 개선했습니다." },
+  { q:"객체 지향적 설계를 고민하며 유지보수성·확장성을 고려해 코드를 작성해본 경험",
+    a:"iOS·Android·백엔드를 혼자 오가며, 기능이 늘어도 흔들리지 않도록 역할을 나누고 재사용 가능한 구조로 코드를 작성하려 노력했습니다." },
+  { q:"주도적으로 팀원과 소통하고 아이디어를 주고받으며 팀의 성과를 만들어본 경험",
+    a:"교내 해커톤에서 팀원들과 파트를 나눠 소통하며, 제한된 시간 안에 하나의 앱을 끝까지 동작하는 형태로 완성했습니다. 각자의 작업을 맞춰가며 완주해낸 협업 경험이었습니다." }
+];
+
+const valueList = document.getElementById('value-list');
+if (valueList) {
+  const check = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4.5 4.5L19 7"/></svg>`;
+  valueList.innerHTML = VALUES.map(v => `
+    <div class="value">
+      <div class="q"><span class="mk">${check}</span><span>${v.q}</span></div>
+      <div class="a">${v.a}</div>
     </div>`).join('');
 }
 
@@ -638,6 +685,7 @@ function renderDetail(p){
         <div class="stat-row">
           ${p.stats.map(s=>`<div class="st"><b>${s.n}</b><small>${s.l}</small></div>`).join('')}
         </div>
+        ${p.statsNote ? `<div class="stats-note">${p.statsNote}</div>` : ''}
         <a class="lnk" href="${p.store.url}" target="_blank" rel="noopener">${p.store.label} →</a>
       </div>` : '';
 
